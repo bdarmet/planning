@@ -167,8 +167,4 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
-	<modules>
-		<module>widgetset</module>
-	</modules>
 </project> 
