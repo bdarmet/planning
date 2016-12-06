@@ -23,7 +23,7 @@ public class Occupation {
 
 	
 	/**
-	 * touche d'acces rapide � l'occupation
+	 * touche d'acces rapide � l'occupation titi
 	 */
 	private String raccourci;
 	

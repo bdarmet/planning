@@ -33,7 +33,7 @@ public class Agent {
 	private String codeNIMS;
 	
 	/**
-	 * est ou non Responsable
+	 * est ou non Responsable toto
 	 */
 	private Boolean responsable;
 	
