@@ -33,6 +33,9 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.themes.Reindeer;
 
+import fr.ciag.planning.domain.CIAGContainer;
+import fr.ciag.planning.domain.CIAGContainerFactory;
+
 /**
  * This is a rudimentary general purpose CRUD view to list and edit JPA entities
  * with JPAContainer. Lists all entities in a table and puts the selected row
@@ -42,7 +45,7 @@ import com.vaadin.ui.themes.Reindeer;
 public class BasicCrudView<T> extends AbsoluteLayout
 		implements Property.ValueChangeListener, Handler, ClickListener, View {
 
-	private JPAContainer<T> container;
+	private CIAGContainer<T> container;
 	private Table _table;
 	private Form form;
 	private FieldFactory _fieldFactory;
@@ -169,7 +172,7 @@ public class BasicCrudView<T> extends AbsoluteLayout
 	}
 
 	protected void initContainer() {
-		container = JPAContainerFactory.make(getEntityClass(), persistenceUnit);
+		container = CIAGContainerFactory.makeCiag(getEntityClass(), persistenceUnit);
 	}
 
 	protected JPAContainer<T> getContainer() {
@@ -234,7 +237,17 @@ public class BasicCrudView<T> extends AbsoluteLayout
 		container.removeItem(itemId);
 	}
 
-	protected void addItem() {
+	Object selectedItem=null;
+	
+	public Object getSelectedItem() {
+		return selectedItem;
+	}
+
+	public void setSelectedItem(Object selectedItem) {
+		this.selectedItem = selectedItem;
+	}
+
+	protected void addItem() { 
 		try {
 			T newInstance = newInstance();
 			Object itemId = container.addEntity(newInstance);

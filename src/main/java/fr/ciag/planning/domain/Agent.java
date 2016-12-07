@@ -6,7 +6,14 @@ import fr.ciag.planning.ui.Ihm;
 
 @Entity
 @Table(name="AGE")
-public class Agent {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@AttributeOverrides({
+    @AttributeOverride(name="topSup", column=@Column(name="AGAGSUP")),
+    @AttributeOverride(name="createDate", column=@Column(name="AGXCRTDAT")),
+    @AttributeOverride(name="modifyDate", column=@Column(name="AGXMAJDAT")),
+    @AttributeOverride(name="deleteDate", column=@Column(name="AGXSUPDAT"))
+})
+public class Agent extends CIAGItem {
 	/**
 	 * identifiant unique de l'agent
 	 */
@@ -82,7 +89,7 @@ public class Agent {
 	/**
 	 * @return the code
 	 */
-	@Column(name="AGAGCOD", length=3)
+	@Column(name="AGAGCOD", length=3, nullable=false)
 	@Ihm(ordre = 1)
 	public String getCode() {
 		return code;
@@ -100,7 +107,7 @@ public class Agent {
 	/**
 	 * @return the nom
 	 */
-	@Column(name="AGAGNOM", length=50)
+	@Column(name="AGAGNOM", length=50, nullable=false)
 	@Ihm(ordre = 2, description="Veuillez saisir le nom de l'agent")
 	public String getNom() {
 		return nom;
@@ -118,7 +125,7 @@ public class Agent {
 	/**
 	 * @return the motDePasse
 	 */
-	@Column(name="AGAGPWD", length=20)
+	@Column(name="AGAGPWD", length=20, nullable=false)
 	@Ihm(ordre = 4, type="password")
 	public String getMotDePasse() {
 		return motDePasse;
