@@ -7,6 +7,10 @@
 		<class>fr.ciag.planning.domain.Agent</class>
 		<class>fr.ciag.planning.domain.Groupe</class>
 		<class>fr.ciag.planning.domain.Occupation</class>
+		<class>fr.ciag.planning.domain.CIAGItem</class>
+		<class>fr.ciag.planning.authentication.User</class>
+		<class>fr.ciag.planning.authentication.Permission</class>
+		<class>fr.ciag.planning.authentication.Role</class>
 		<exclude-unlisted-classes>false</exclude-unlisted-classes>
 		<properties>
 			<property name="javax.persistence.jdbc.driver"

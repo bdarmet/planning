@@ -6,6 +6,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.mgt.*;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.realm.Realm;
+
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewChangeListener;
@@ -15,6 +20,7 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 
 import fr.ciag.planning.CAFUI;
+import fr.ciag.planning.authentication.JpaAuthorizingRealm;
 
 /**
  * Content of the UI when the user is logged in.
@@ -22,29 +28,25 @@ import fr.ciag.planning.CAFUI;
  * 
  */
 public class MainScreen extends HorizontalLayout {
-
-	// définition du lien avec la base de donnée
-	public static final String PERSISTENCE_UNIT = "fr.ciag.planning";
-	static {
-		EntityManager em = JPAContainerFactory.createEntityManagerForPersistenceUnit(PERSISTENCE_UNIT);
-	}
-
+	// contient le menu principal de l'application
 	private Menu menu;
-
+	
 	public MainScreen(CAFUI ui) {
+		// renseigne la classe chargée de faire les conversions  
 		VaadinSession.getCurrent().setConverterFactory(new ConverterFactory());
+		// définie le style CSS
 		setStyleName("main-screen");
 		CssLayout viewContainer = new CssLayout();
 		final Navigator navigator = new Navigator(ui, viewContainer);
 		navigator.setErrorView(ErrorView.class);
 		menu = new Menu(navigator);
 
-		Metamodel metamodel = JPAContainerFactory.createEntityManagerForPersistenceUnit(PERSISTENCE_UNIT)
+		Metamodel metamodel = JPAContainerFactory.createEntityManagerForPersistenceUnit(ui.getPersistenceUnit())
 				.getEntityManagerFactory().getMetamodel();
 		Set<EntityType<?>> entities = metamodel.getEntities();
 		for (EntityType<?> entityType : entities) {
 			Class<?> javaType = entityType.getJavaType();
-			BasicCrudView view = new BasicCrudView(javaType, PERSISTENCE_UNIT);
+			BasicCrudView view = new BasicCrudView(javaType);
 			menu.addView(view, view.getCaption(), view.getCaption(), FontAwesome.EDIT);
 		}
 

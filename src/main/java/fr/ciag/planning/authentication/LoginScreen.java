@@ -1,12 +1,18 @@
 package fr.ciag.planning.authentication;
 
 import java.io.Serializable;
+
+import org.apache.shiro.*;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.*;
+
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.Page;
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
@@ -17,6 +23,9 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import fr.ciag.planning.CAFUI;
+import fr.ciag.planning.ui.MainScreen;
+
 /**
  * UI content when the user is not logged in yet.
  */
@@ -25,17 +34,38 @@ public class LoginScreen extends CssLayout {
     private TextField username;
     private PasswordField password;
     private Button login;
+    private CheckBox checkbox = new CheckBox("Se souvenir de moi");
     private Button forgotPassword;
     private LoginListener loginListener;
-    private AccessControl accessControl;
+    //private AccessControl accessControl;
+    /**
+     * permet l'appel multiple à la fenetre de login
+     */
+	private boolean goToAuthorizedManagerView = false;  
+    
+	public void clear () {
+		username.clear();
+		password.clear();
+		checkbox.clear();
+	}
 
+/*
     public LoginScreen(AccessControl accessControl, LoginListener loginListener) {
+    	goToAuthorizedManagerView = true;
         this.loginListener = loginListener;
         this.accessControl = accessControl;
         buildUI();
         username.focus();
     }
-
+*/
+	
+    public LoginScreen(LoginListener loginListener) {
+    	goToAuthorizedManagerView = true;
+        this.loginListener = loginListener;
+        buildUI();
+        username.focus();
+    }
+	
     private void buildUI() {
         addStyleName("login-screen");
 
@@ -74,6 +104,7 @@ public class LoginScreen extends CssLayout {
         buttons.setStyleName("buttons");
         loginForm.addComponent(buttons);
 
+        buttons.addComponent(checkbox);
         buttons.addComponent(login = new Button("Connexion"));
         login.setDisableOnClick(true);
         login.addClickListener(new Button.ClickListener() {
@@ -112,6 +143,7 @@ public class LoginScreen extends CssLayout {
     }
 
     private void login() {
+    	/*
         if (accessControl.signIn(username.getValue(), password.getValue())) {
             loginListener.loginSuccessful();
         } else {
@@ -120,8 +152,35 @@ public class LoginScreen extends CssLayout {
                     Notification.Type.HUMANIZED_MESSAGE));
             username.focus();
         }
+        */
+		Subject currentUser = SecurityUtils.getSubject();
+		UsernamePasswordToken token = new UsernamePasswordToken(
+				username.getValue(), password.getValue());
+		
+		token.setRememberMe(checkbox.getValue()); // if true user will not have to enter username/password in new browser session
+		
+		try {
+			currentUser.login(token); //tries to authenticate user
+			clear();
+			
+			if (goToAuthorizedManagerView) {
+				if (currentUser.hasRole("manager")) {
+					loginListener.loginSuccessful();
+				} else {
+					currentUser.logout();
+					Page.getCurrent().reload();
+				}
+			} else {
+				loginListener.loginSuccessful();
+			}
+		} catch (Exception ex) { //if authentication is unsuccessful
+			clear();
+			Notification.show("Login Error:", "Invalid username/password combination.", Notification.TYPE_ERROR_MESSAGE);
+		}
     }
 
+    
+    
     private void showNotification(Notification notification) {
         // keep the notification visible a little while after moving the
         // mouse, or until clicked

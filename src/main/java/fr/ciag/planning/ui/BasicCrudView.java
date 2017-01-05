@@ -56,12 +56,10 @@ public class BasicCrudView<T> extends AbsoluteLayout
 	private Button addButton;
 	private Button deleteButton;
 	private Panel panel;
-	private final String persistenceUnit;
 	private HorizontalSplitPanel splitPanel;
 
-	public BasicCrudView(Class<T> entityClass, final String persistenceUnit) {
+	public BasicCrudView(Class<T> entityClass) {
 		this.entityClass = entityClass;
-		this.persistenceUnit = persistenceUnit;
 		setSizeFull();
 		initContainer();
 		buildView();
@@ -172,7 +170,7 @@ public class BasicCrudView<T> extends AbsoluteLayout
 	}
 
 	protected void initContainer() {
-		container = CIAGContainerFactory.makeCiag(getEntityClass(), persistenceUnit);
+		container = CIAGContainerFactory.make(getEntityClass());
 	}
 
 	protected JPAContainer<T> getContainer() {

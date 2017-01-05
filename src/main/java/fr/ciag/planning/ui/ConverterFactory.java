@@ -5,6 +5,11 @@ import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.data.util.converter.StringToBooleanConverter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 
+/**
+ * cette classe permet de convertir une chaine de caratère en autre chose (booleen)
+ * @author bda
+ *
+ */
 public class ConverterFactory extends DefaultConverterFactory {
 
     @SuppressWarnings("unchecked")

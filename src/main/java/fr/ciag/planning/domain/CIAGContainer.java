@@ -4,6 +4,8 @@ import java.util.Date;
 
 import com.vaadin.addon.jpacontainer.JPAContainer;
 
+import fr.ciag.planning.authentication.User;
+
 public class CIAGContainer<T> extends JPAContainer<T> {
 	
 	public CIAGContainer(Class<T> entityClass) {
@@ -24,5 +26,4 @@ public class CIAGContainer<T> extends JPAContainer<T> {
     public boolean removeItem(Object itemId) {
     	return super.removeItem(itemId);
     }
-        
 }

@@ -14,21 +14,13 @@ import com.vaadin.ui.Tree;
 import com.vaadin.ui.Window;
 
 public class AutoCrudViews extends Window {
-	
-	//définition du lien avec la base de donnée
-	public static final String PERSISTENCE_UNIT = "fr.ciag.planning";
-	static {
-		EntityManager em = JPAContainerFactory
-				.createEntityManagerForPersistenceUnit(PERSISTENCE_UNIT);
-	}
-
 	//Création de la page
-	public AutoCrudViews() {
-		/*on coupe la page en 2 parties : 
-		- navtree qu contient le menu
-		
-		*/
-		
+	public AutoCrudViews(String PERSISTENCE_UNIT) {
+
+		/*slitPanel : 
+		 * - gauche menu (navtree)
+		 * - droite ecran
+		 */
 		final HorizontalSplitPanel horizontalSplitPanel = new HorizontalSplitPanel();
 		Tree navTree = new Tree();
 		navTree.addListener(new Property.ValueChangeListener() {
@@ -57,8 +49,7 @@ public class AutoCrudViews extends Window {
 		Set<EntityType<?>> entities = metamodel.getEntities();
 		for (EntityType<?> entityType : entities) {
 			Class<?> javaType = entityType.getJavaType();
-			BasicCrudView view = new BasicCrudView(javaType,
-					PERSISTENCE_UNIT);
+			BasicCrudView view = new BasicCrudView(javaType);
 			navTree.addItem(view);
 			navTree.setItemCaption(view, view.getCaption());
 			navTree.setChildrenAllowed(view, false);

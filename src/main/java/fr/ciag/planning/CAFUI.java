@@ -1,7 +1,15 @@
 package fr.ciag.planning;
 
+import javax.persistence.EntityManager;
 import javax.servlet.annotation.WebServlet;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.mgt.DefaultSecurityManager;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.realm.Realm;
+import org.apache.shiro.subject.Subject;
+
+import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Viewport;
@@ -14,6 +22,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import fr.ciag.planning.authentication.*;
 import fr.ciag.planning.authentication.LoginScreen.*;
+import fr.ciag.planning.domain.CIAGContainerFactory;
 import fr.ciag.planning.ui.*;
 
 /**
@@ -24,24 +33,39 @@ import fr.ciag.planning.ui.*;
 @Theme("caftheme")
 @Widgetset("fr.ciag.caf.Widgetset")
 public class CAFUI extends UI {
-
-    private AccessControl accessControl = new BasicAccessControl();
-/*
-	@Override
-	public void init(VaadinRequest vaadinRequest) {
-		setMainWindow(new AutoCrudViews());
+	
+	// définition du lien avec la base de donnée
+	// le paramétrage de la base de données est définie sous le nom "fr.ciag.planning"
+	// dans le fichier META-INF/persistence.xml
+	public static final String PERSISTENCE_UNIT = "fr.ciag.planning";
+	public static String getPersistenceUnit() {
+		return PERSISTENCE_UNIT;
 	}
-*/
+
+	static {
+		EntityManager em = JPAContainerFactory.createEntityManagerForPersistenceUnit(PERSISTENCE_UNIT);
+		
+		Realm realm = new JpaAuthorizingRealm(); 
+		SecurityManager securityManager = new DefaultSecurityManager(realm);
+		SecurityUtils.setSecurityManager(securityManager);
+		
+		 User user = new User();
+		 user.setLogin("BDA");
+		 user.setSalt(JpaSecurityUtil.getSalt());
+		 user.setPassword(JpaSecurityUtil.hashPassword("BDA", user.getSalt()));
+		 CIAGContainerFactory.persist(user);		
+	}
+	
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         Responsive.makeResponsive(this);
         setLocale(vaadinRequest.getLocale());
         getPage().setTitle("caf");
-        if (!accessControl.isUserSignedIn()) {
-            setContent(new LoginScreen(accessControl, new LoginListener() {
+        Subject currentUser = SecurityUtils.getSubject();
+        if (!currentUser.isAuthenticated()) {
+            setContent(new LoginScreen(new LoginListener() {
                 @Override
                 public void loginSuccessful() {
-                    showMainView();
                 }
             }));
         } else {
@@ -59,11 +83,7 @@ public class CAFUI extends UI {
         return (CAFUI) UI.getCurrent();
     }
 
-    public AccessControl getAccessControl() {
-        return accessControl;
-    }
-
-    @WebServlet(urlPatterns = "/*", name = "CAFUIServlet", asyncSupported = true)
+     @WebServlet(urlPatterns = "/*", name = "CAFUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = CAFUI.class, productionMode = false)
     public static class cafUIServlet extends VaadinServlet {
     }

@@ -3,19 +3,30 @@ package fr.ciag.planning.domain;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public class CIAGItem {
+
+	@Id
+	@GeneratedValue
+	@Column(name="XUXUID")
+	private long id;
+	
+	@Column(name="topSup", length=1)
 	private String topSup="N";
 	
+	@Column(name="createDate")
 	private Date createDate=null;
 	
-	private Date ModifyDate=null;
+	@Column(name="modifyDate")
+	private Date modifyDate=null;
 	
-	private Date DeleteDate=null;
+	@Column(name="deleteDate")
+	private Date deleteDate=null;
 
-	@Column(name="topSup", length=1)
 	public String getTopSup() {
 		return topSup;
 	}
@@ -24,7 +35,6 @@ public class CIAGItem {
 		this.topSup = topSup;
 	}
 
-	@Column(name="createDate")
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -33,22 +43,20 @@ public class CIAGItem {
 		this.createDate = createDate;
 	}
 
-	@Column(name="modifyDate")
 	public Date getModifyDate() {
-		return ModifyDate;
+		return modifyDate;
 	}
 
 	public void setModifyDate(Date modifyDate) {
-		ModifyDate = modifyDate;
+		this.modifyDate = modifyDate;
 	}
 
-	@Column(name="deleteDate")
 	public Date getDeleteDate() {
-		return DeleteDate;
+		return deleteDate;
 	}
 
 	public void setDeleteDate(Date deleteDate) {
-		DeleteDate = deleteDate;
+		this.deleteDate = deleteDate;
 	}
 
 }

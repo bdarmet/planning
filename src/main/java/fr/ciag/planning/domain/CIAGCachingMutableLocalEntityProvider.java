@@ -19,7 +19,7 @@ public class CIAGCachingMutableLocalEntityProvider<T> extends CachingMutableLoca
     @Override
     public T addEntity(T entity) throws RuntimeException {
     	((CIAGItem)entity).setCreateDate(new Date());
-        return detachEntity((T) entity);
+        return super.addEntity(entity);
     }
     
     @Override
