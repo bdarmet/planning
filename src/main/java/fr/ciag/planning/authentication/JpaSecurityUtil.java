@@ -19,7 +19,7 @@ public final class JpaSecurityUtil {
 		return sha256Hash.toHex();
 	}
 
-	public CredentialsMatcher getCredentialMatcher() {
+	public static CredentialsMatcher getCredentialMatcher() {
 		final HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
 		credentialsMatcher.setHashAlgorithmName(Sha256Hash.ALGORITHM_NAME);
 		credentialsMatcher.setHashIterations(JpaAuthorizingRealm.HASH_ITERATIONS);

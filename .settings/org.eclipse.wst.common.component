@@ -2,8 +2,8 @@
     <wb-module deploy-name="caf-ui-1.0-SNAPSHOT">
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/" source-path="/src/main/webapp"/>
         <dependent-module archiveName="widgetset.war" deploy-path="/WEB-INF/lib" handle="module:/resource/widgetset/widgetset">
             <dependency-type>uses</dependency-type>

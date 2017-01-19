@@ -21,6 +21,7 @@ import com.vaadin.ui.HorizontalLayout;
 
 import fr.ciag.planning.CAFUI;
 import fr.ciag.planning.authentication.JpaAuthorizingRealm;
+import fr.ciag.planning.authentication.User;
 
 /**
  * Content of the UI when the user is logged in.
@@ -32,15 +33,18 @@ public class MainScreen extends HorizontalLayout {
 	private Menu menu;
 	
 	public MainScreen(CAFUI ui) {
+
 		// renseigne la classe chargée de faire les conversions  
-		VaadinSession.getCurrent().setConverterFactory(new ConverterFactory());
+		VaadinSession.getCurrent().setConverterFactory(new CIAGConverterFactory());
 		// définie le style CSS
 		setStyleName("main-screen");
 		CssLayout viewContainer = new CssLayout();
 		final Navigator navigator = new Navigator(ui, viewContainer);
 		navigator.setErrorView(ErrorView.class);
 		menu = new Menu(navigator);
+		//TODO : appeler CRUDVIEW 
 
+		/*
 		Metamodel metamodel = JPAContainerFactory.createEntityManagerForPersistenceUnit(ui.getPersistenceUnit())
 				.getEntityManagerFactory().getMetamodel();
 		Set<EntityType<?>> entities = metamodel.getEntities();
@@ -49,6 +53,9 @@ public class MainScreen extends HorizontalLayout {
 			BasicCrudView view = new BasicCrudView(javaType);
 			menu.addView(view, view.getCaption(), view.getCaption(), FontAwesome.EDIT);
 		}
+		*/
+		CRUDView view=new CRUDView(User.class);
+		menu.addView(view, view.getCaption(), view.getCaption(), FontAwesome.EDIT);
 
 		//navigator.addViewChangeListener(viewChangeListener);
 		addComponent(menu);

@@ -22,7 +22,6 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import fr.ciag.planning.authentication.*;
 import fr.ciag.planning.authentication.LoginScreen.*;
-import fr.ciag.planning.domain.CIAGContainerFactory;
 import fr.ciag.planning.ui.*;
 
 /**
@@ -32,7 +31,7 @@ import fr.ciag.planning.ui.*;
 @Viewport("user-scalable=no,initial-scale=1.0")
 @Theme("caftheme")
 @Widgetset("fr.ciag.caf.Widgetset")
-public class CAFUI extends UI {
+public class CAFUI extends UI { 
 	
 	// définition du lien avec la base de donnée
 	// le paramétrage de la base de données est définie sous le nom "fr.ciag.planning"
@@ -44,19 +43,33 @@ public class CAFUI extends UI {
 
 	static {
 		EntityManager em = JPAContainerFactory.createEntityManagerForPersistenceUnit(PERSISTENCE_UNIT);
-		
 		Realm realm = new JpaAuthorizingRealm(); 
 		SecurityManager securityManager = new DefaultSecurityManager(realm);
 		SecurityUtils.setSecurityManager(securityManager);
 		
-		 User user = new User();
-		 user.setLogin("BDA");
-		 user.setSalt(JpaSecurityUtil.getSalt());
-		 user.setPassword(JpaSecurityUtil.hashPassword("BDA", user.getSalt()));
-		 CIAGContainerFactory.persist(user);		
+		
+		//on renseigne les informations du role root
+		User root=User.findByLogin("root");
+		if(root==null) {
+			root=new User("root", "root");
+			root.getRoles().add(new Role("manager"));
+			em.getTransaction().begin();
+			em.persist(root);
+			em.getTransaction().commit();		
+		}
 	}
 	
     @Override
+    /**
+     * appel initial. 
+     * renseigne le titre de la page (caf)
+     * récupere de shiro l'utilisateur.<br/> 
+     * si l'utilisateur n'est pas authentifié,<br/>  
+     *       on appelle LoginScreen (qui appelera showMainView)<br/> 
+     * sinon   <br/>
+     *       on appelle showMainView<br/>
+     * finSi<br/>
+     */
     protected void init(VaadinRequest vaadinRequest) {
         Responsive.makeResponsive(this);
         setLocale(vaadinRequest.getLocale());
@@ -66,6 +79,7 @@ public class CAFUI extends UI {
             setContent(new LoginScreen(new LoginListener() {
                 @Override
                 public void loginSuccessful() {
+                	showMainView();
                 }
             }));
         } else {
@@ -73,6 +87,9 @@ public class CAFUI extends UI {
         }
     }
 
+    /**
+     * la fenetre principale devient MainScreen 
+     */
     protected void showMainView() {
         addStyleName(ValoTheme.UI_WITH_MENU);
         setContent(new MainScreen(CAFUI.this));
@@ -83,7 +100,7 @@ public class CAFUI extends UI {
         return (CAFUI) UI.getCurrent();
     }
 
-     @WebServlet(urlPatterns = "/*", name = "CAFUIServlet", asyncSupported = true)
+    @WebServlet(urlPatterns = "/*", name = "CAFUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = CAFUI.class, productionMode = false)
     public static class cafUIServlet extends VaadinServlet {
     }

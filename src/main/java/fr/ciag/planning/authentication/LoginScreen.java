@@ -48,16 +48,6 @@ public class LoginScreen extends CssLayout {
 		password.clear();
 		checkbox.clear();
 	}
-
-/*
-    public LoginScreen(AccessControl accessControl, LoginListener loginListener) {
-    	goToAuthorizedManagerView = true;
-        this.loginListener = loginListener;
-        this.accessControl = accessControl;
-        buildUI();
-        username.focus();
-    }
-*/
 	
     public LoginScreen(LoginListener loginListener) {
     	goToAuthorizedManagerView = true;
@@ -69,19 +59,14 @@ public class LoginScreen extends CssLayout {
     private void buildUI() {
         addStyleName("login-screen");
 
-        // login form, centered in the available part of the screen
         Component loginForm = buildLoginForm();
 
-        // layout to center login form when there is sufficient screen space
-        // - see the theme for how this is made responsive for various screen
-        // sizes
         VerticalLayout centeringLayout = new VerticalLayout();
         centeringLayout.setStyleName("centering-layout");
         centeringLayout.addComponent(loginForm);
         centeringLayout.setComponentAlignment(loginForm,
                 Alignment.MIDDLE_CENTER);
 
-        // information text about logging in
         CssLayout loginInformation = buildLoginInformation();
 
         addComponent(centeringLayout);
@@ -104,7 +89,6 @@ public class LoginScreen extends CssLayout {
         buttons.setStyleName("buttons");
         loginForm.addComponent(buttons);
 
-        buttons.addComponent(checkbox);
         buttons.addComponent(login = new Button("Connexion"));
         login.setDisableOnClick(true);
         login.addClickListener(new Button.ClickListener() {
@@ -127,6 +111,7 @@ public class LoginScreen extends CssLayout {
                 showNotification(new Notification("Hint: Try anything"));
             }
         });
+        loginForm.addComponent(checkbox);
         forgotPassword.addStyleName(ValoTheme.BUTTON_LINK);
         return loginForm;
     }
@@ -143,16 +128,6 @@ public class LoginScreen extends CssLayout {
     }
 
     private void login() {
-    	/*
-        if (accessControl.signIn(username.getValue(), password.getValue())) {
-            loginListener.loginSuccessful();
-        } else {
-            showNotification(new Notification("Login failed",
-                    "Please check your username and password and try again.",
-                    Notification.Type.HUMANIZED_MESSAGE));
-            username.focus();
-        }
-        */
 		Subject currentUser = SecurityUtils.getSubject();
 		UsernamePasswordToken token = new UsernamePasswordToken(
 				username.getValue(), password.getValue());

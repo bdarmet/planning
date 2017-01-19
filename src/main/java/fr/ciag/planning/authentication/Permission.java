@@ -4,7 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "permissions")
+@Table(name = "XPRM")
 public class Permission {
 
  @Id

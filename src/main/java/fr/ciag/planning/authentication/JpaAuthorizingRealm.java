@@ -23,6 +23,10 @@ public class JpaAuthorizingRealm extends AuthorizingRealm {
 	public static final String REALM_NAME = "REALM_AUTHENTICATE";
 	public static final int HASH_ITERATIONS = 200;
 	
+	public JpaAuthorizingRealm() {
+		super(JpaSecurityUtil.getCredentialMatcher());
+	}
+	
 	/**
 	 * Cette methode charge le username,  
 	 */

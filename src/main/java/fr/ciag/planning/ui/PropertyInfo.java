@@ -2,7 +2,7 @@ package fr.ciag.planning.ui;
 
 import java.lang.reflect.Field;
 
-public class PropertyInfo {
+public class PropertyInfo implements Comparable {
 	private Field field; 
 	private Ihm ihm;
 	
@@ -42,5 +42,15 @@ public class PropertyInfo {
 	 */
 	public void setField(Field field) {
 		this.field = field;
+	}
+
+	public int compareTo(PropertyInfo o) {
+		// TODO Auto-generated method stub
+		return new Integer(getIhm().ordre()).compareTo(o.getIhm().ordre());
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		return -1;
 	} 
 }

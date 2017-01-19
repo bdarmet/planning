@@ -9,10 +9,15 @@ import fr.ciag.planning.ui.Ihm;
 @Table(name="AGE")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @AttributeOverrides({
-    @AttributeOverride(name="id", column=@Column(name="AGAGID")),
     @AttributeOverride(name="topSup", column=@Column(name="AGAGSUP")),
+    @AttributeOverride(name="createUser", column=@Column(name="AGXCRTUSR")),
+    @AttributeOverride(name="createOrigin", column=@Column(name="AGXCRTPGM")),
     @AttributeOverride(name="createDate", column=@Column(name="AGXCRTDAT")),
+    @AttributeOverride(name="modifyUser", column=@Column(name="AGXMAJUSR")),
+    @AttributeOverride(name="modifyOrigin", column=@Column(name="AGXMAJPGM")),
     @AttributeOverride(name="modifyDate", column=@Column(name="AGXMAJDAT")),
+    @AttributeOverride(name="deleteUser", column=@Column(name="AGXSUPUSR")),
+    @AttributeOverride(name="deleteOrigin", column=@Column(name="AGXSUPPGM")),
     @AttributeOverride(name="deleteDate", column=@Column(name="AGXSUPDAT"))
 })
 public class Agent extends User {

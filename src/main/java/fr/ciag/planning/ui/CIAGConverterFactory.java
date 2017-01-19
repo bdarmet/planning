@@ -1,5 +1,7 @@
 package fr.ciag.planning.ui;
 
+import java.util.Set;
+
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.data.util.converter.StringToBooleanConverter;
@@ -10,7 +12,7 @@ import com.vaadin.data.util.converter.StringToIntegerConverter;
  * @author bda
  *
  */
-public class ConverterFactory extends DefaultConverterFactory {
+public class CIAGConverterFactory extends DefaultConverterFactory {
 
     @SuppressWarnings("unchecked")
 	@Override
@@ -25,6 +27,12 @@ public class ConverterFactory extends DefaultConverterFactory {
         if (presentationType == String.class && (modelType == Integer.class || modelType == int.class)) {
             return (Converter<PRESENTATION, MODEL>) new StringToIntegerConverter();
         }
+        
+        // Handle Boolean <-> String
+        if (presentationType == String.class && (modelType == Set.class)) {
+            return (Converter<PRESENTATION, MODEL>) new MultiSelectConverter<>();
+        }
+        
         
         // Let default factory handle the rest
         return super.findConverter(presentationType, modelType);
